@@ -1,30 +1,50 @@
 package info.devexchanges.cardsstack;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
-public class CardsAdapter extends ArrayAdapter<CardItem> {
+public class CardsAdapter extends BaseAdapter {
 
     private Activity activity;
-    private List<CardItem> cardItems;
+    private final static int AVATAR_WIDTH = 100;
+    private final static int AVATAR_HEIGHT = 200;
+    private List<CardItem> mData;
 
-    public CardsAdapter(Activity activity, int resource, List<CardItem> cards) {
-        super(activity, resource);
+    public CardsAdapter(Activity activity, List<CardItem> data) {
+        this.mData = data;
         this.activity = activity;
-        this.cardItems = cards;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public int getCount() {
+        return mData.size();
+    }
+
+    @Override
+    public CardItem getItem(int position) {
+        return mData.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         // If holder not exist then locate all view from UI file.
@@ -40,32 +60,61 @@ public class CardsAdapter extends ArrayAdapter<CardItem> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.btnLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(activity, "You liked it!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        holder.btnLove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(activity, "You loved it!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        //setting data to views
+        holder.name.setText(getItem(position).getName());
+        holder.location.setText(getItem(position).getLocation());
+        holder.avatar.setImageBitmap(decodeSampledBitmapFromResource(activity.getResources(),
+                getItem(position).getDrawableId(), 150, 300));
 
         return convertView;
     }
 
-    private class ViewHolder {
-        private ImageView imageView;
-        private View btnLike;
-        private View btnLove;
+    private class ViewHolder{
+        private ImageView avatar;
+        private TextView name;
+        private TextView location;
 
         public ViewHolder(View view) {
-            btnLike = view.findViewById(R.id.like);
-            btnLove = view.findViewById(R.id.love);
-            imageView = (ImageView) view.findViewById(R.id.image_view);
+            avatar = (ImageView)view.findViewById(R.id.avatar);
+            name = (TextView)view.findViewById(R.id.name);
+            location = (TextView)view.findViewById(R.id.location);
         }
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }
