@@ -16,8 +16,8 @@ import java.util.List;
 public class CardsAdapter extends BaseAdapter {
 
     private Activity activity;
-    private final static int AVATAR_WIDTH = 100;
-    private final static int AVATAR_HEIGHT = 200;
+    private final static int AVATAR_WIDTH = 150;
+    private final static int AVATAR_HEIGHT = 300;
     private List<CardItem> data;
 
     public CardsAdapter(Activity activity, List<CardItem> data) {
@@ -61,7 +61,7 @@ public class CardsAdapter extends BaseAdapter {
         holder.name.setText(getItem(position).getName());
         holder.location.setText(getItem(position).getLocation());
         holder.avatar.setImageBitmap(decodeSampledBitmapFromResource(activity.getResources(),
-                getItem(position).getDrawableId(), 150, 300));
+                getItem(position).getDrawableId(), AVATAR_WIDTH, AVATAR_HEIGHT));
 
         return convertView;
     }

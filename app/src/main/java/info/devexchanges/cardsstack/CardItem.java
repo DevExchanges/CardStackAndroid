@@ -31,8 +31,4 @@ public class CardItem {
     public String getLocation() {
         return location;
     }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
 }

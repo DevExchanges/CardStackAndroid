@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.reset) {
             cardStack.resetStack();
+            currentPosition = 0;
         }
         return super.onOptionsItemSelected(item);
     }
