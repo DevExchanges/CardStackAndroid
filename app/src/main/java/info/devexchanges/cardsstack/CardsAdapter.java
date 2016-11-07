@@ -4,15 +4,12 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -21,21 +18,21 @@ public class CardsAdapter extends BaseAdapter {
     private Activity activity;
     private final static int AVATAR_WIDTH = 100;
     private final static int AVATAR_HEIGHT = 200;
-    private List<CardItem> mData;
+    private List<CardItem> data;
 
     public CardsAdapter(Activity activity, List<CardItem> data) {
-        this.mData = data;
+        this.data = data;
         this.activity = activity;
     }
 
     @Override
     public int getCount() {
-        return mData.size();
+        return data.size();
     }
 
     @Override
     public CardItem getItem(int position) {
-        return mData.get(position);
+        return data.get(position);
     }
 
     @Override
